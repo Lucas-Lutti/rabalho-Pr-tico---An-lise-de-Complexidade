@@ -1,0 +1,18 @@
+.DS_Store
+build/
+bin/
+.tools/
+EXTRA ENTREGA/
+artigo.zip
+
+# Auxiliares de compilação do LaTeX
+artigo/pdf/*.aux
+artigo/pdf/*.bbl
+artigo/pdf/*.blg
+artigo/pdf/*.fdb_latexmk
+artigo/pdf/*.fls
+artigo/pdf/*.log
+artigo/pdf/*.out
+artigo/pdf/*.synctex.gz
+artigo/pdf/*.toc
+artigo/pdf/*.xdv

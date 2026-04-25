@@ -1,0 +1,129 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% How to use writeLaTeX: 
+%
+% You edit the source code here on the left, and the preview on the
+% right shows you the result within a few seconds.
+%
+% Bookmark this page and share the URL with your co-authors. They can
+% edit at the same time!
+%
+% You can upload figures, bibliographies, custom classes and
+% styles using the files menu.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{article}
+
+% `inputenc` não deve ser usado com fontspec (XeTeX/LuaTeX); com pdfLaTeX mantém UTF-8.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+\fi
+
+\usepackage{sbc-template}
+\usepackage{graphicx,url}
+\usepackage{float} 
+\usepackage[brazil]{babel}
+\usepackage{tabularx}
+\newcolumntype{C}{>{\centering\arraybackslash}X} % <-- modified
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, every axis/.append style={font=\footnotesize}}
+\usetikzlibrary{babel}
+\usepackage[inline]{enumitem}
+\usepackage{tcolorbox}
+
+
+%%%%%%%%%%%%%%%%% Pacotes para inserção de algoritmos - BEGIN
+\usepackage[ruled,lined]{algorithm2e}
+
+
+% Pacote para a definição de novas cores
+\usepackage{xcolor}
+% Definindo novas cores
+\definecolor{verde}{rgb}{0.25,0.5,0.35}
+\definecolor{jpurple}{rgb}{0.5,0,0.35}
+\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+%\definecolor{oldmauve}{rgb}{0.4, 0.19, 0.28}
+
+\usepackage{listings}
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{jpurple}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{verde},
+    morecomment=[s][\color{blue}]{/**}{*/},
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    backgroundcolor=\color{white!10},
+    breakautoindent=true,
+    captionpos=b,
+    xleftmargin=0pt,
+    tabsize=2
+}
+%%%%%%%%%%%%%%%%% Pacotes para inserção de algoritmos - END
+
+     
+\sloppy
+
+\title{Análise Empírica de Estruturas Union--Find para Conectividade Dinâmica}
+
+\author{Lucas Picinin Campos Lutti\inst{1} }
+
+
+\address{%
+Pontifícia Universidade Católica de Minas Gerais (PUC Minas)\\
+Curso de Engenharia de Software
+  \email{lucaspicinin@hotmail.com}
+}
+
+\begin{document} 
+
+\maketitle
+
+\begin{abstract}
+  This paper compares three Disjoint Set Union (Union--Find) variants: a naive implementation,
+  union by rank, and union by rank combined with path compression. The comparison is based on
+  reproducible sequences of \texttt{Find} and \texttt{Union} operations, with measurements of total
+  execution time and instrumented accesses to the internal \texttt{parent} and \texttt{rank} arrays.
+  The results highlight the practical performance gap between the naive structure and the
+  classical optimizations associated with Tarjan-style analysis.
+\end{abstract}
+     
+\begin{resumo} 
+  Este trabalho compara três variantes de conjuntos disjuntos (\emph{Union--Find}): uma implementação
+  ingênua, outra com união por rank e uma terceira com união por rank associada à compressão de caminho.
+  A comparação é feita sobre sequências reproduzíveis de operações \texttt{Find} e \texttt{Union}, medindo
+  o tempo total de execução e os acessos instrumentados aos vetores internos da estrutura.
+  Os resultados mostram, na prática, a diferença de desempenho entre a variante ingênua e as
+  heurísticas clássicas analisadas por Tarjan.
+\end{resumo}
+
+
+\begin{tcolorbox}
+\footnotesize
+\textbf{Fundamentos de Projeto e Análise de Algoritmos (FPAA) --- Trabalho Prático}\\
+PUC Minas, Engenharia de Software. Os dados do ambiente de experimentos estão descritos na Metodologia e em \texttt{docs/AMBIENTE.md} no repositório do projeto.
+\end{tcolorbox}
+
+
+\input{Sections/01_Introducao}
+\input{Sections/02_Fundamentacao_Teorica}
+\input{Sections/03_Trabalhos_Relacionados}
+\input{Sections/04_Materiais_Metodos}
+\input{Sections/05_Resultados_Discussoes}
+\input{Sections/06_Conclusao}
+
+\bibliographystyle{sbc}
+\bibliography{sbc-template}
+
+\appendix
+\section*{Apêndice}
+\input{Sections/Apendice}
+
+\end{document}

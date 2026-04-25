@@ -1,0 +1,91 @@
+\section{Reprodução dos experimentos}
+\label{apendice:reproducao}
+
+O código-fonte deste trabalho está disponível em \url{https://github.com/Lucas-Lutti/rabalho-Pr-tico---An-lise-de-Complexidade.git}. A partir da raiz do repositório do código (pasta que contém \texttt{Makefile}, \texttt{src/} e \texttt{artigo/}), os resultados do artigo podem ser reproduzidos com os comandos a seguir:
+
+\begin{itemize}
+  \item \textbf{Compilar o benchmark:} \texttt{make}
+  \item \textbf{Gerar \texttt{results/benchmark.csv}:} \texttt{./bin/benchmark --all}
+  \item \textbf{Atualizar dados para os gráficos e a tabela no \LaTeX{}:} \texttt{python3 scripts/export\_latex\_plot\_data.py}
+  \item \textbf{Compilar o PDF do artigo:} \texttt{cd artigo \&\& ./compile\_pdf.sh}
+\end{itemize}
+
+\noindent Parâmetros fixos do modo \texttt{--all} (vide \texttt{src/experimentos.cpp}): valores de $n$ $\{500,1000,2000,4000,8000,16000,32000,64000\}$; $m=20n$; fração de operações \texttt{Union} igual a $0{,}25$; semente da instância $i$-ésima dada por $42+7919i$ (com $i=0$ para $n=500$); aquecimento com \texttt{DsuTarjan} sobre a mesma sequência antes das medições.
+
+\section{Formato do arquivo \texttt{results/benchmark.csv}}
+\label{apendice:csv}
+
+Cada linha após o cabeçalho corresponde a uma variante e a um par $(n,m)$. Colunas:
+
+\begin{itemize}
+  \item \texttt{variant}: \texttt{naive}, \texttt{union\_rank} ou \texttt{tarjan};
+  \item \texttt{n}, \texttt{m}: tamanho do universo e número de operações;
+  \item \texttt{seed}: semente usada na geração da sequência;
+  \item \texttt{time\_ns}: tempo total em nanosegundos para replay da sequência;
+  \item \texttt{reads}, \texttt{writes}: contagem instrumentada de leituras e escritas em \texttt{parent}/\texttt{rank};
+  \item \texttt{total\_accesses}: soma \texttt{reads + writes}.
+\end{itemize}
+
+\section{Instrumentação de acessos}
+\label{apendice:stats}
+
+A estrutura \texttt{AccessStats} acumula leituras e escritas registradas pelos métodos \texttt{parent\_at}, \texttt{parent\_set}, \texttt{rank\_at} e \texttt{rank\_set}. A variante ingênua utiliza apenas \texttt{parent}; as outras duas também contabilizam acessos a \texttt{rank}.
+
+\begingroup
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{jpurple}\bfseries,
+  commentstyle=\color{verde},
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  tabsize=2,
+  xleftmargin=1.5em,
+  frame=single
+}
+\lstinputlisting[caption={\texttt{include/estatisticas\_acesso.hpp} (contadores).},label=lst:access]{../include/estatisticas_acesso.hpp}
+\endgroup
+
+\section{Geração reproduzível das operações}
+\label{apendice:ops}
+
+\begingroup
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{jpurple}\bfseries,
+  commentstyle=\color{verde},
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  tabsize=2,
+  xleftmargin=1.5em,
+  frame=single
+}
+\lstinputlisting[caption={Trecho de \texttt{src/operacoes.cpp}: sequência pseudoaleatória com \texttt{std::mt19937}.},label=lst:ops,firstline=7,lastline=28]{../src/operacoes.cpp}
+\endgroup
+
+\section{Implementações \texttt{Find} e \texttt{Union} (ingênua e Tarjan)}
+\label{apendice:dsu}
+
+A Listagem~\ref{lst:naive} mostra a variante sem rank nem compressão. A Listagem~\ref{lst:tarjan} ilustra compressão de caminho em duas passagens e, em seguida, a rotina de \texttt{unite} por rank utilizada também na variante ``união por rank'' (sem o segundo laço de compressão em \texttt{find}).
+
+\begingroup
+\lstset{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{jpurple}\bfseries,
+  commentstyle=\color{verde},
+  numbers=left,
+  numberstyle=\tiny,
+  breaklines=true,
+  tabsize=2,
+  xleftmargin=1.5em,
+  frame=single
+}
+\lstinputlisting[caption={\texttt{src/dsu\_ingenuo.cpp}: \texttt{find} e \texttt{unite}.},label=lst:naive,firstline=32,lastline=50]{../src/dsu_ingenuo.cpp}
+\lstinputlisting[caption={\texttt{src/dsu\_rank\_com\_compressao.cpp}: \texttt{find} com compressão e \texttt{unite} por rank.},label=lst:tarjan,firstline=48,lastline=82]{../src/dsu_rank_com_compressao.cpp}
+\endgroup
+
+\noindent\textit{Nota:} as listagens leem arquivos em \texttt{artigo/include/} e \texttt{artigo/src/}, mantidos junto ao projeto \LaTeX{} para tornar a compilação do artigo autocontida. Após alterar o código-fonte principal na raiz do repositório, essas cópias devem ser atualizadas antes de recompilar o PDF.

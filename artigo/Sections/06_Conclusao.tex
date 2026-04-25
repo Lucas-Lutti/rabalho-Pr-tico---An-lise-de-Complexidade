@@ -1,0 +1,6 @@
+\section{Conclusão}
+\label{sec:conclusao}
+
+Os experimentos realizados mostram que as heurísticas de união por rank e compressão de caminho têm efeito direto no desempenho de estruturas de conjuntos disjuntos quando submetidas a sequências mistas de \texttt{Find} e \texttt{Union}. A implementação ingênua apresentou crescimento muito mais acentuado, enquanto as variantes otimizadas mantiveram comportamento mais estável, sobretudo a combinação completa associada a Tarjan, em acordo com a análise amortizada em termos de $\alpha(n)$ \cite{tarjan1975efficiency}.
+
+Esse resultado ajuda a explicar por que algoritmos que fazem muitas consultas de conectividade, como Kruskal em grafos maiores, se beneficiam tanto dessas otimizações. Como continuidade natural deste estudo, podem-se investigar cenários com outras proporções entre uniões e consultas, além de integrar o DSU a uma implementação completa de Kruskal para observar, no programa inteiro, o peso relativo da estrutura de dados em comparação com a etapa de ordenação das arestas.

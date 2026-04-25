@@ -1,0 +1,78 @@
+\section{Discussão dos Resultados}
+\label{sec:resultados}
+
+\subsection{Tempo de execução}
+
+O gráfico da Figura~\ref{fig:tempo} foi construído diretamente a partir dos dados exportados de \texttt{results/benchmark.csv} para \texttt{data/tempo\_por\_n.dat} por meio de \texttt{scripts/export\_latex\_plot\_data.py}. Nele, a curva da variante ingênua cresce bem mais rapidamente à medida que $n$ aumenta, o que é compatível com encadeamentos longos em \texttt{Find}. A variante com união por rank já reduz esse crescimento de forma visível, enquanto a combinação com compressão de caminho permanece como a mais rápida nas maiores instâncias testadas, como se espera de um custo amortizado muito baixo por operação \cite{tarjan1975efficiency}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.88\textwidth,
+  height=6.8cm,
+  xlabel={$n$},
+  ylabel={Tempo total (ms)},
+  xmode=log,
+  log basis x=2,
+  ymode=log,
+  legend style={at={(0.03,0.97)},anchor=north west,font=\footnotesize},
+  grid=major,
+]
+\addplot+[thick,mark=*,mark size=1.1pt,color=red!75!black] table[x=n,y=naive_ms,col sep=tab] {data/tempo_por_n.dat};
+\addplot+[thick,mark=square*,mark size=1.1pt,color=blue!70!black] table[x=n,y=union_rank_ms,col sep=tab] {data/tempo_por_n.dat};
+\addplot+[thick,mark=triangle*,mark size=1.3pt,color=green!50!black] table[x=n,y=tarjan_ms,col sep=tab] {data/tempo_por_n.dat};
+\legend{Ingênua,União por rank,Rank + compressão}
+\end{axis}
+\end{tikzpicture}
+\caption{Tempo total para processar $m=20n$ operações (25\% \texttt{Union}, 75\% \texttt{Find}) em função de $n$. Fonte: medições do \texttt{benchmark} descrito na Seção~\ref{sec:metodologia}.}
+\label{fig:tempo}
+\end{figure}
+
+\subsection{Acessos à memória}
+
+Na Figura~\ref{fig:acessos}, vê-se o total de leituras e escritas instrumentadas para a mesma sequência de operações: somente no vetor \texttt{parent} na variante ingênua e em \texttt{parent} mais \texttt{rank} nas demais. A distância entre a curva ingênua e as outras duas é grande ao longo de todo o intervalo testado, o que reforça o efeito do balanceamento das árvores. Entre união por rank e Tarjan, o total de acessos não cai na mesma proporção do tempo de execução: a compressão de caminho acrescenta escritas ao achatar a estrutura, mas compensa isso ao reduzir a profundidade das buscas seguintes.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.88\textwidth,
+  height=6.8cm,
+  xlabel={$n$},
+  ylabel={Acessos totais (leituras + escritas)},
+  xmode=log,
+  log basis x=2,
+  ymode=log,
+  legend style={at={(0.03,0.97)},anchor=north west,font=\footnotesize},
+  grid=major,
+]
+\addplot+[thick,mark=*,mark size=1.1pt,color=red!75!black] table[x=n,y=naive_acc,col sep=tab] {data/acessos_por_n.dat};
+\addplot+[thick,mark=square*,mark size=1.1pt,color=blue!70!black] table[x=n,y=union_rank_acc,col sep=tab] {data/acessos_por_n.dat};
+\addplot+[thick,mark=triangle*,mark size=1.3pt,color=green!50!black] table[x=n,y=tarjan_acc,col sep=tab] {data/acessos_por_n.dat};
+\legend{Ingênua,União por rank,Rank + compressão}
+\end{axis}
+\end{tikzpicture}
+\caption{Total de acessos instrumentados na mesma sequência de operações (\texttt{parent} em todas as variantes; \texttt{rank} adicional nas duas com rank).}
+\label{fig:acessos}
+\end{figure}
+
+\subsection{Tabela-resumo}
+
+A Tabela~\ref{tab:resumo} consolida valores nos extremos do conjunto de valores de $n$ utilizados, permitindo comparar ordens de grandeza de tempo e de acessos sem depender da leitura apenas das curvas.
+
+\begin{table}[ht]
+\centering
+\caption{Resumo numérico para o menor e o maior $n$ do experimento ($m=20n$, 25\% \texttt{Union}). Tempos em segundos; acessos conforme contadores do código.}
+\label{tab:resumo}
+\begin{tabular}{c c l r r}
+\hline
+$n$ & $m$ & Variante & Tempo (s) & Acessos \\
+\hline
+\input{data/tabela_resumo.inc.tex}
+\end{tabular}
+\end{table}
+
+\subsection{Síntese}
+
+No cenário aleatório adotado neste trabalho, as três implementações se separam de forma clara. A variante ingênua apresenta crescimento muito mais acentuado, enquanto união por rank e compressão de caminho mantêm curvas bem mais contidas. Esses resultados são compatíveis com a discussão teórica da Seção~\ref{sec:fundamentacao}, embora o experimento, por si só, não substitua a prova formal das taxas assintóticas.
